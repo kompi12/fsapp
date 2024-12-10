@@ -1,101 +1,178 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [formData, setFormData] = useState({
+    departureDate: "",
+    returnDate: "",
+    originLocationCode: "",
+    destinationLocationCode: "",
+    adults: "",
+    currencyCode: "",
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formData.originLocationCode);
+    if(formData.originLocationCode == formData.destinationLocationCode){
+     alert("Departure and Return Airport cannot be the same");;
+      return;
+    }
+    if (new Date(formData.returnDate) < new Date(formData.departureDate)) {
+      alert("End date cannot be before start date.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5133", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+          throw new Error("Network response was not ok");
+      }
+      console.log("Response:", response);
+      const result = await response.json();
+      console.log(result);
+  } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+  }
+    console.log("Form Data Submitted:", formData);
+  };
+
+  return (
+    <div className="min-h-screen flex justify-center items-center bg-green-100">
+    <div className="p-8 bg-gradient-to-br from-gray-50 to-gray-100 shadow-2xl rounded-xl max-w-5xl mx-auto text-gray-500 animate-fadeIn">
+      {/* Header */}
+      <header className="mb-8 text-center">
+        <h1 className="text-3xl font-bold text-blue-700 mb-2">Flight Offer Search</h1>
+        <p className="text-gray-600 text-sm">
+          Search low-cost budget airlines and flights.
+        </p>
+      </header>
+
+      {/* Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white p-6 rounded-lg shadow-lg  text-gray-500"
+      >
+        {/* Start Date */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">Start Date</label>
+          <input
+            type="date"
+            name="departureDate"
+            value={formData.departureDate}
+            onChange={handleChange}
+            className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300  text-gray-500"
+            required
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+
+        {/* End Date */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">End Date</label>
+          <input
+            type="date"
+            name="returnDate"
+            value={formData.returnDate}
+            onChange={handleChange}
+            className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300  text-gray-500"
+            required
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        </div>
+
+          {/* adults of People */}
+          <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">adults of People</label>
+          <input
+            type="adults"
+            name="adults"
+            value={formData.adults}
+            onChange={handleChange}
+            className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300  text-gray-500"
+            required
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </div>
+
+        {/* Departure Airport */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">Departure Airport</label>
+          <select
+            name="originLocationCode"
+            value={formData.originLocationCode}
+            onChange={handleChange}
+            className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 bg-white  text-gray-500"
+            required
+          >
+            <option value="" disabled>
+              Select an option
+            </option>
+            <option value="JFK">JFK Airport</option>
+            <option value="LAX">LAX Airport</option>
+            <option value="ORD">ORD Airport</option>
+          </select>
+        </div>
+
+        {/* Return Airport */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">Return Airport</label>
+          <select
+            name="destinationLocationCode"
+            value={formData.destinationLocationCode}
+            onChange={handleChange}
+            className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 bg-white  text-gray-500"
+            required
+          >
+            <option value="" disabled>
+              Select an option
+            </option>
+            <option value="JFK">JFK Airport</option>
+            <option value="LAX">LAX Airport</option>
+            <option value="ORD">ORD Airport</option>
+          </select>
+        </div>
+
+        
+
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">currencyCode</label>
+          <select
+            name="currencyCode"
+            value={formData.currencyCode}
+            onChange={handleChange}
+            className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 bg-white  text-gray-500"
+            required
+          >
+            <option value="" disabled>
+              Select an option
+            </option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR </option>
+            <option value="optionC">FUR</option>
+          </select>
+        </div>
+
+     
+        {/* Submit Button */}
+        <div className="md:col-span-3 flex justify-end">
+          <button
+            type="submit"
+            className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-lg hover:bg-blue-700 transition transform hover:scale-105 "
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div> </div>
   );
 }
