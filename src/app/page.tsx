@@ -1,12 +1,10 @@
 "use client";
-import { useState  } from "react";
+import { useState } from "react";
 
 /*interface Airport {
   code: string;
   name: string;
 } */
-
-
 
 // Define the types for the FlightOfferResponse
 interface FlightOfferResponse {
@@ -136,9 +134,11 @@ export default function Home() {
     currencyCode: "",
   });
 
-  const [flightOffers, setFlightOffers] = useState<FlightOfferResponse | null>(null); // State to hold the response
+  const [flightOffers, setFlightOffers] = useState<FlightOfferResponse | null>(
+    null
+  ); // State to hold the response
 
- /*  const [airports, setAirports] = useState<Airport[]>([]);
+  /*  const [airports, setAirports] = useState<Airport[]>([]);
   const [loading, setLoading] = useState<boolean>(true);  // Loading state
 
 
@@ -157,10 +157,12 @@ export default function Home() {
 
     fetchAirports();
   }, []); +/ */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  }; 
+  };
 
   const generateQueryKey = () => {
     return `${formData.departureDate}_${formData.returnDate}_${formData.originLocationCode}_${formData.destinationLocationCode}_${formData.adults}_${formData.currencyCode}`;
@@ -180,7 +182,7 @@ export default function Home() {
     }
 
     const queryKey = generateQueryKey();
-    
+
     // Check if we already have the results in localStorage
     const cachedData = localStorage.getItem(queryKey);
     if (cachedData) {
@@ -221,10 +223,10 @@ export default function Home() {
       <div className="p-8 bg-gradient-to-br from-gray-50 to-gray-100 shadow-2xl rounded-xl max-w-5xl mx-auto text-gray-500 animate-fadeIn">
         {/* Header */}
         <header className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-blue-700 mb-2">Flight Offer Search</h1>
-          <p className="text-gray-600 text-sm">
-            Search low-cost budget airlines and flights.
-          </p>
+          <h1 className="text-3xl font-bold text-blue-700 mb-2">
+          Pretraživanje ponuda letova
+          </h1>
+          
         </header>
 
         {/* Form */}
@@ -234,7 +236,8 @@ export default function Home() {
         >
           {/* Start Date */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700">Start Date</label>
+            <label className="text-sm font-medium text-gray-700">
+            Datum polaska:            </label>
             <input
               type="date"
               name="departureDate"
@@ -247,7 +250,9 @@ export default function Home() {
 
           {/* End Date */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700">End Date</label>
+            <label className="text-sm font-medium text-gray-700">
+            Datum povratka:
+            </label>
             <input
               type="date"
               name="returnDate"
@@ -260,7 +265,7 @@ export default function Home() {
 
           {/* Adults */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700">Adults</label>
+            <label className="text-sm font-medium text-gray-700">Broj osoba:</label>
             <input
               type="number"
               name="adults"
@@ -271,10 +276,11 @@ export default function Home() {
             />
           </div>
 
-    
-  {/* Departure Airport */}
-  <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700">Departure Airport</label>
+          {/* Departure Airport */}
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-700">
+            Polazni aerodrom:
+            </label>
             <select
               name="originLocationCode"
               value={formData.originLocationCode}
@@ -282,30 +288,31 @@ export default function Home() {
               className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 bg-white text-gray-500"
               required
             >
-              <option value="" disabled>Select an option</option>
+              <option value="" disabled>
+                Select an option
+              </option>
               <option value="DAA">Davison Army Airfield</option>
-<option value="DBN">W. H. Bud Barron Airport</option>
-<option value="WNH">Wenshan Puzhehei Airport</option>
-<option value="WAG">Whanganui Airport</option>
-<option value="MCD">Mackinac Island Airport</option>
-<option value="MAA">Chennai International Airport</option>
-<option value="AKI">Akiak Airport</option>
-<option value="AAV">Allah Valley Airport</option>
-<option value="CEO">Waco Kungo Airport</option>
-<option value="CAS">Anfa Airport</option>
-<option value="ZAG">Franjo Tuđman Airport</option>
-<option value="JFK">John F. Kennedy International Airport</option>
-<option value="BEG">Belgrade Nikola Tesla Airport</option>
-<option value="HNL">Honolulu International Airport</option>
-
-
-
+              <option value="DBN">W. H. Bud Barron Airport</option>
+              <option value="WNH">Wenshan Puzhehei Airport</option>
+              <option value="WAG">Whanganui Airport</option>
+              <option value="MCD">Mackinac Island Airport</option>
+              <option value="MAA">Chennai International Airport</option>
+              <option value="AKI">Akiak Airport</option>
+              <option value="AAV">Allah Valley Airport</option>
+              <option value="CEO">Waco Kungo Airport</option>
+              <option value="CAS">Anfa Airport</option>
+              <option value="ZAG">Franjo Tuđman Airport</option>
+              <option value="JFK">John F. Kennedy International Airport</option>
+              <option value="BEG">Belgrade Nikola Tesla Airport</option>
+              <option value="HNL">Honolulu International Airport</option>
             </select>
           </div>
 
           {/* Return Airport */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700">Return Airport</label>
+            <label className="text-sm font-medium text-gray-700">
+            Odredišni aerodrom:
+            </label>
             <select
               name="destinationLocationCode"
               value={formData.destinationLocationCode}
@@ -313,30 +320,31 @@ export default function Home() {
               className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 bg-white text-gray-500"
               required
             >
-              <option value="" disabled>Select an option</option>
+              <option value="" disabled>
+                Select an option
+              </option>
               <option value="DAA">Davison Army Airfield</option>
-<option value="DBN">W. H. Bud Barron Airport</option>
-<option value="WNH">Wenshan Puzhehei Airport</option>
-<option value="WAG">Whanganui Airport</option>
-<option value="MCD">Mackinac Island Airport</option>
-<option value="MAA">Chennai International Airport</option>
-<option value="AKI">Akiak Airport</option>
-<option value="AAV">Allah Valley Airport</option>
-<option value="CEO">Waco Kungo Airport</option>
-<option value="CAS">Anfa Airport</option>
-<option value="ZAG">Franjo Tuđman Airport</option>
-<option value="JFK">John F. Kennedy International Airport</option>
-<option value="BEG">Belgrade Nikola Tesla Airport</option>
-<option value="BOS">Logan International Airport</option>
-
-
-
+              <option value="DBN">W. H. Bud Barron Airport</option>
+              <option value="WNH">Wenshan Puzhehei Airport</option>
+              <option value="WAG">Whanganui Airport</option>
+              <option value="MCD">Mackinac Island Airport</option>
+              <option value="MAA">Chennai International Airport</option>
+              <option value="AKI">Akiak Airport</option>
+              <option value="AAV">Allah Valley Airport</option>
+              <option value="CEO">Waco Kungo Airport</option>
+              <option value="CAS">Anfa Airport</option>
+              <option value="ZAG">Franjo Tuđman Airport</option>
+              <option value="JFK">John F. Kennedy International Airport</option>
+              <option value="BEG">Belgrade Nikola Tesla Airport</option>
+              <option value="BOS">Logan International Airport</option>
             </select>
           </div>
 
           {/* Currency Code */}
           <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700">Currency Code</label>
+            <label className="text-sm font-medium text-gray-700">
+              Valute
+            </label>
             <select
               name="currencyCode"
               value={formData.currencyCode}
@@ -344,7 +352,9 @@ export default function Home() {
               className="mt-1 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300 bg-white text-gray-500"
               required
             >
-              <option value="" disabled>Select an option</option>
+              <option value="" disabled>
+                Select an option
+              </option>
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>
             </select>
@@ -362,117 +372,176 @@ export default function Home() {
         </form>
 
         {/* Display Flight Offers */}
-       
+
         {flightOffers && (
-  <div className="mt-8">
-    <h2 className="text-2xl font-bold text-blue-700 mb-4">Flight Offers</h2>
-    {flightOffers.data.length === 0 ? (
-      <p className="text-center text-lg text-gray-600">No flight offers available.</p>
-    ) : (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {flightOffers.data.map((offer, index) => (
-          <div
-            key={index}
-            className="border-2 border-gray-200 rounded-xl p-6 shadow-lg bg-white hover:shadow-xl transform transition duration-300 hover:scale-105"
-          >
-            <h3 className="text-xl font-semibold text-blue-800 mb-3">{offer.id}</h3>
-            
-            {/* Polazni Aerodrom (Departure Airport) */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Polazni aerodrom:</p>
-              <p className="text-lg text-gray-900">{offer.itineraries[0]?.segments[0]?.departure.iataCode}</p>
-            </div>
-            
-            {/* Odredišni Aerodrom (Arrival Airport) */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Odredišni aerodrom:</p>
-              <p className="text-lg text-gray-900">{offer.itineraries[0]?.segments[1]?.arrival.iataCode}</p>
-            </div>
-            
-            {/* Datum Polaska/Povratka (Departure/Return Date) */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Datum polaska:</p>
-              <p className="text-lg text-gray-900">{new Date(offer.itineraries[0]?.segments[0]?.departure.at).toLocaleDateString()}</p>
-            </div>
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Datum povratka:</p>
-              <p className="text-lg text-gray-900">{new Date(offer.itineraries[1]?.segments[offer.itineraries[1].segments.length - 1]?.arrival.at).toLocaleDateString()}</p>
-            </div>
-            
-            {/* Broj Presjedanja (Number of Stops) */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Broj presjedanja (odlazno):</p>
-              <p className="text-lg text-gray-900">{offer.itineraries[0]?.segments?.length - 1}</p>
-            </div>
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Broj presjedanja (povratno):</p>
-              <p className="text-lg text-gray-900">{offer.itineraries[1]?.segments?.length - 1}</p>
-            </div>
-            
-            {/* Broj Putnika (Number of Passengers) */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Broj putnika:</p>
-              <p className="text-lg text-gray-900">{formData.adults}</p>
-            </div>
-            
-            {/* Valuta (Currency) */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Valuta:</p>
-              <p className="text-lg text-gray-900">{offer.price.currency}</p>
-            </div>
-            
-            {/* Ukupna Cijena (Total Price) */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Ukupna cijena:</p>
-              <p className="text-lg font-semibold text-green-600">
-                {offer.price.currency} {offer.price.grandTotal}
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold text-blue-700 mb-4">
+              Ponude letova
+            </h2>
+            {flightOffers.data.length === 0 ? (
+              <p className="text-center text-lg text-gray-600">
+                Nema letova za te datume.
               </p>
-            </div>
-            
-            {/* Aircraft Time */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Vrijeme polaska:</p>
-              <p className="text-lg text-gray-900">
-                {new Date(offer.itineraries[0]?.segments[0]?.departure.at).toLocaleTimeString()}
-              </p>
-            </div>
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Vrijeme dolaska:</p>
-              <p className="text-lg text-gray-900">
-                {new Date(offer.itineraries[0]?.segments[0]?.arrival.at).toLocaleTimeString()}
-              </p>
-            </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {flightOffers.data.map((offer, index) => (
+                  <div
+                    key={index}
+                    className="border-2 border-gray-200 rounded-xl p-6 shadow-lg bg-white hover:shadow-xl transform transition duration-300 hover:scale-105"
+                  >
+                    <h3 className="text-xl font-semibold text-blue-800 mb-3">
+                      {offer.id}
+                    </h3>
 
-              {/* Aircraft Time  Return*/}
-              <div className="mb-3">
-              <p className="font-medium text-gray-700">Vrijeme polaska povratka:</p>
-              <p className="text-lg text-gray-900">
-                {new Date(offer.itineraries[1]?.segments[0]?.departure.at).toLocaleTimeString()}
-              </p>
-            </div>
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Vrijeme dolaska povratka:</p>
-              <p className="text-lg text-gray-900">
-                {new Date(offer.itineraries[1]?.segments[0]?.arrival.at).toLocaleTimeString()}
-              </p>
-            </div>
-            
-            
-            {/* Airline */}
-            <div className="mb-3">
-              <p className="font-medium text-gray-700">Zrakoplovna kompanija:</p>
-              <p className="text-lg text-gray-900">
-                {flightOffers.dictionaries.carriers[offer.itineraries[0]?.segments[0]?.carrierCode]}
-              </p>
-            </div>
+                    {/* Polazni Aerodrom (Departure Airport) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Polazni aerodrom:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {offer.itineraries[0]?.segments[0]?.departure.iataCode}
+                      </p>
+                    </div>
+
+                    {/* Odredišni Aerodrom (Arrival Airport) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Odredišni aerodrom:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {offer.itineraries[0]?.segments[1]?.arrival.iataCode}
+                      </p>
+                    </div>
+
+                    {/* Datum Polaska/Povratka (Departure/Return Date) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Datum polaska:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[0]?.segments[0]?.departure.at
+                        ).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Datum povratka:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[1]?.segments[
+                            offer.itineraries[1].segments.length - 1
+                          ]?.arrival.at
+                        ).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    {/* Broj Presjedanja (Number of Stops) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Broj presjedanja (odlazno):
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {offer.itineraries[0]?.segments?.length - 1}
+                      </p>
+                    </div>
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Broj presjedanja (povratno):
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {offer.itineraries[1]?.segments?.length - 1}
+                      </p>
+                    </div>
+
+                    {/* Broj Putnika (Number of Passengers) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">Broj putnika:</p>
+                      <p className="text-lg text-gray-900">{formData.adults}</p>
+                    </div>
+
+                    {/* Valuta (Currency) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">Valuta:</p>
+                      <p className="text-lg text-gray-900">
+                        {offer.price.currency}
+                      </p>
+                    </div>
+
+                    {/* Ukupna Cijena (Total Price) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Ukupna cijena:
+                      </p>
+                      <p className="text-lg font-semibold text-green-600">
+                        {offer.price.currency} {offer.price.grandTotal}
+                      </p>
+                    </div>
+
+                    {/* Aircraft Time */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Vrijeme polaska:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[0]?.segments[0]?.departure.at
+                        ).toLocaleTimeString()}
+                      </p>
+                    </div>
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Vrijeme dolaska:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[0]?.segments[0]?.arrival.at
+                        ).toLocaleTimeString()}
+                      </p>
+                    </div>
+
+                    {/* Aircraft Time  Return*/}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Vrijeme polaska povratka:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[1]?.segments[0]?.departure.at
+                        ).toLocaleTimeString()}
+                      </p>
+                    </div>
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Vrijeme dolaska povratka:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[1]?.segments[0]?.arrival.at
+                        ).toLocaleTimeString()}
+                      </p>
+                    </div>
+
+                    {/* Airline */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Zrakoplovna kompanija:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {
+                          flightOffers.dictionaries.carriers[
+                            offer.itineraries[0]?.segments[0]?.carrierCode
+                          ]
+                        }
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        ))}
-      </div>
-    )}
-  </div>
-)}
-
-
+        )}
       </div>
     </div>
   );
