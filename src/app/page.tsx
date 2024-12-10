@@ -1,5 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState  } from "react";
+
+/*interface Airport {
+  code: string;
+  name: string;
+} */
+
+
 
 // Define the types for the FlightOfferResponse
 interface FlightOfferResponse {
@@ -131,10 +138,29 @@ export default function Home() {
 
   const [flightOffers, setFlightOffers] = useState<FlightOfferResponse | null>(null); // State to hold the response
 
+ /*  const [airports, setAirports] = useState<Airport[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);  // Loading state
+
+
+  useEffect(() => {
+    const fetchAirports = async () => {
+      try {
+        const response = await fetch('/api/airports');
+        const data = await response.json();
+        setAirports(data); // Set the fetched airports
+      } catch (error) {
+        console.error('Error fetching airports:', error);
+      } finally {
+        setLoading(false); // Set loading to false after the fetch completes
+      }
+    };
+
+    fetchAirports();
+  }, []); +/ */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
+  }; 
 
   const generateQueryKey = () => {
     return `${formData.departureDate}_${formData.returnDate}_${formData.originLocationCode}_${formData.destinationLocationCode}_${formData.adults}_${formData.currencyCode}`;
@@ -142,7 +168,7 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setFlightOffers(null); // Clear the previous results
     // Validation
     if (formData.originLocationCode === formData.destinationLocationCode) {
       alert("Departure and Return Airport cannot be the same");
@@ -245,8 +271,9 @@ export default function Home() {
             />
           </div>
 
-          {/* Departure Airport */}
-          <div className="flex flex-col">
+    
+  {/* Departure Airport */}
+  <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-700">Departure Airport</label>
             <select
               name="originLocationCode"
@@ -256,9 +283,23 @@ export default function Home() {
               required
             >
               <option value="" disabled>Select an option</option>
-              <option value="JFK">JFK Airport</option>
-              <option value="LAX">LAX Airport</option>
-              <option value="ORD">ORD Airport</option>
+              <option value="DAA">Davison Army Airfield</option>
+<option value="DBN">W. H. Bud Barron Airport</option>
+<option value="WNH">Wenshan Puzhehei Airport</option>
+<option value="WAG">Whanganui Airport</option>
+<option value="MCD">Mackinac Island Airport</option>
+<option value="MAA">Chennai International Airport</option>
+<option value="AKI">Akiak Airport</option>
+<option value="AAV">Allah Valley Airport</option>
+<option value="CEO">Waco Kungo Airport</option>
+<option value="CAS">Anfa Airport</option>
+<option value="ZAG">Franjo Tuđman Airport</option>
+<option value="JFK">John F. Kennedy International Airport</option>
+<option value="BEG">Belgrade Nikola Tesla Airport</option>
+<option value="HNL">Honolulu International Airport</option>
+
+
+
             </select>
           </div>
 
@@ -273,9 +314,23 @@ export default function Home() {
               required
             >
               <option value="" disabled>Select an option</option>
-              <option value="JFK">JFK Airport</option>
-              <option value="LAX">LAX Airport</option>
-              <option value="ORD">ORD Airport</option>
+              <option value="DAA">Davison Army Airfield</option>
+<option value="DBN">W. H. Bud Barron Airport</option>
+<option value="WNH">Wenshan Puzhehei Airport</option>
+<option value="WAG">Whanganui Airport</option>
+<option value="MCD">Mackinac Island Airport</option>
+<option value="MAA">Chennai International Airport</option>
+<option value="AKI">Akiak Airport</option>
+<option value="AAV">Allah Valley Airport</option>
+<option value="CEO">Waco Kungo Airport</option>
+<option value="CAS">Anfa Airport</option>
+<option value="ZAG">Franjo Tuđman Airport</option>
+<option value="JFK">John F. Kennedy International Airport</option>
+<option value="BEG">Belgrade Nikola Tesla Airport</option>
+<option value="BOS">Logan International Airport</option>
+
+
+
             </select>
           </div>
 
@@ -331,7 +386,7 @@ export default function Home() {
             {/* Odredišni Aerodrom (Arrival Airport) */}
             <div className="mb-3">
               <p className="font-medium text-gray-700">Odredišni aerodrom:</p>
-              <p className="text-lg text-gray-900">{offer.itineraries[0]?.segments[0]?.arrival.iataCode}</p>
+              <p className="text-lg text-gray-900">{offer.itineraries[0]?.segments[1]?.arrival.iataCode}</p>
             </div>
             
             {/* Datum Polaska/Povratka (Departure/Return Date) */}
@@ -341,17 +396,17 @@ export default function Home() {
             </div>
             <div className="mb-3">
               <p className="font-medium text-gray-700">Datum povratka:</p>
-              <p className="text-lg text-gray-900">{new Date(offer.itineraries[0]?.segments[offer.itineraries[0].segments.length - 1]?.arrival.at).toLocaleDateString()}</p>
+              <p className="text-lg text-gray-900">{new Date(offer.itineraries[1]?.segments[offer.itineraries[1].segments.length - 1]?.arrival.at).toLocaleDateString()}</p>
             </div>
             
             {/* Broj Presjedanja (Number of Stops) */}
             <div className="mb-3">
               <p className="font-medium text-gray-700">Broj presjedanja (odlazno):</p>
-              <p className="text-lg text-gray-900">{offer.itineraries[0]?.segments[0]?.numberOfStops}</p>
+              <p className="text-lg text-gray-900">{offer.itineraries[0]?.segments?.length - 1}</p>
             </div>
             <div className="mb-3">
               <p className="font-medium text-gray-700">Broj presjedanja (povratno):</p>
-              <p className="text-lg text-gray-900">{offer.itineraries[0]?.segments[offer.itineraries[0].segments.length - 1]?.numberOfStops}</p>
+              <p className="text-lg text-gray-900">{offer.itineraries[1]?.segments?.length - 1}</p>
             </div>
             
             {/* Broj Putnika (Number of Passengers) */}
@@ -387,6 +442,21 @@ export default function Home() {
                 {new Date(offer.itineraries[0]?.segments[0]?.arrival.at).toLocaleTimeString()}
               </p>
             </div>
+
+              {/* Aircraft Time  Return*/}
+              <div className="mb-3">
+              <p className="font-medium text-gray-700">Vrijeme polaska povratka:</p>
+              <p className="text-lg text-gray-900">
+                {new Date(offer.itineraries[1]?.segments[0]?.departure.at).toLocaleTimeString()}
+              </p>
+            </div>
+            <div className="mb-3">
+              <p className="font-medium text-gray-700">Vrijeme dolaska povratka:</p>
+              <p className="text-lg text-gray-900">
+                {new Date(offer.itineraries[1]?.segments[0]?.arrival.at).toLocaleTimeString()}
+              </p>
+            </div>
+            
             
             {/* Airline */}
             <div className="mb-3">
