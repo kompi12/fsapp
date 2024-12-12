@@ -4,6 +4,123 @@ interface Airport {
     name: string;
 }
 
+interface FlightOfferResponse {
+  meta: Meta;
+  data: FlightOffer[];
+  dictionaries: Dictionaries;
+}
+
+interface Meta {
+  count: number;
+  links: Links;
+}
+
+interface Links {
+  self: string;
+}
+
+interface FlightOffer {
+  type: string;
+  id: string;
+  source: string;
+  instantTicketingRequired: boolean;
+  nonHomogeneous: boolean;
+  oneWay: boolean;
+  isUpsellOffer: boolean;
+  lastTicketingDate: string;
+  lastTicketingDateTime: string;
+  numberOfBookableSeats: number;
+  itineraries: Itinerary[];
+  price: Price;
+  pricingOptions: PricingOptions;
+  validatingAirlineCodes: string[];
+  travelerPricings: TravelerPricing[];
+}
+
+interface Itinerary {
+  duration: string;
+  segments: Segment[];
+}
+
+interface Segment {
+  departure: DepartureArrival;
+  arrival: DepartureArrival;
+  carrierCode: string;
+  number: string;
+  aircraft: Aircraft;
+  operating: Operating;
+  duration: string;
+  id: string;
+  numberOfStops: number;
+  blacklistedInEU: boolean;
+}
+
+interface DepartureArrival {
+  iataCode: string;
+  terminal: string;
+  at: string;
+}
+
+interface Aircraft {
+  code: string;
+}
+
+interface Operating {
+  carrierCode: string;
+}
+
+interface Price {
+  currency: string;
+  total: string;
+  basePrice: string;
+  fees: Fee[];
+  grandTotal: string;
+}
+
+interface Fee {
+  amount: string;
+  type: string;
+}
+
+interface PricingOptions {
+  fareType: string[];
+  includedCheckedBagsOnly: boolean;
+}
+
+interface TravelerPricing {
+  travelerId: string;
+  fareOption: string;
+  travelerType: string;
+  price: Price;
+  fareDetailsBySegment: FareDetailsBySegment[];
+}
+
+interface FareDetailsBySegment {
+  segmentId: string;
+  cabin: string;
+  fareBasis: string;
+  class: string;
+  includedCheckedBags: IncludedCheckedBags;
+}
+
+interface IncludedCheckedBags {
+  quantity: number | null;
+  weight: number | null;
+  weightUnit: string;
+}
+
+interface Dictionaries {
+  locations: Record<string, Location>;
+  aircraft: Record<string, string>;
+  currencies: Record<string, string>;
+  carriers: Record<string, string>;
+}
+
+interface Location {
+  cityCode: string;
+  countryCode: string;
+}
+
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

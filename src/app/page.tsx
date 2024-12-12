@@ -13,10 +13,123 @@ interface FormData {
 }
 
 
-
 interface FlightOfferResponse {
-  data: { id: string; details: string }[]; // Assuming each offer has an `id`
+  meta: Meta;
+  data: FlightOffer[];
+  dictionaries: Dictionaries;
 }
+
+interface Meta {
+  count: number;
+  links: Links;
+}
+
+interface Links {
+  self: string;
+}
+
+interface FlightOffer {
+  type: string;
+  id: string;
+  source: string;
+  instantTicketingRequired: boolean;
+  nonHomogeneous: boolean;
+  oneWay: boolean;
+  isUpsellOffer: boolean;
+  lastTicketingDate: string;
+  lastTicketingDateTime: string;
+  numberOfBookableSeats: number;
+  itineraries: Itinerary[];
+  price: Price;
+  pricingOptions: PricingOptions;
+  validatingAirlineCodes: string[];
+  travelerPricings: TravelerPricing[];
+}
+
+interface Itinerary {
+  duration: string;
+  segments: Segment[];
+}
+
+interface Segment {
+  departure: DepartureArrival;
+  arrival: DepartureArrival;
+  carrierCode: string;
+  number: string;
+  aircraft: Aircraft;
+  operating: Operating;
+  duration: string;
+  id: string;
+  numberOfStops: number;
+  blacklistedInEU: boolean;
+}
+
+interface DepartureArrival {
+  iataCode: string;
+  terminal: string;
+  at: string;
+}
+
+interface Aircraft {
+  code: string;
+}
+
+interface Operating {
+  carrierCode: string;
+}
+
+interface Price {
+  currency: string;
+  total: string;
+  basePrice: string;
+  fees: Fee[];
+  grandTotal: string;
+}
+
+interface Fee {
+  amount: string;
+  type: string;
+}
+
+interface PricingOptions {
+  fareType: string[];
+  includedCheckedBagsOnly: boolean;
+}
+
+interface TravelerPricing {
+  travelerId: string;
+  fareOption: string;
+  travelerType: string;
+  price: Price;
+  fareDetailsBySegment: FareDetailsBySegment[];
+}
+
+interface FareDetailsBySegment {
+  segmentId: string;
+  cabin: string;
+  fareBasis: string;
+  class: string;
+  includedCheckedBags: IncludedCheckedBags;
+}
+
+interface IncludedCheckedBags {
+  quantity: number | null;
+  weight: number | null;
+  weightUnit: string;
+}
+
+interface Dictionaries {
+  locations: Record<string, Location>;
+  aircraft: Record<string, string>;
+  currencies: Record<string, string>;
+  carriers: Record<string, string>;
+}
+
+interface Location {
+  cityCode: string;
+  countryCode: string;
+}
+
 
 export default function Home() {
   const [formData, setFormData] = useState<FormData>({
@@ -184,8 +297,8 @@ export default function Home() {
                <option value="">Select Airport</option>
       {airports.map((airport: any) => (
         <option key={airport.id} value={airport.iata_code}>
-          {airport.name} {airport.iata_code}
-        </option>
+          {airport.airport_name} -{airport.country_name}- {airport.iata_code}
+          </option>
       ))}
     
               </select>
@@ -208,8 +321,8 @@ export default function Home() {
                <option value="">Select Airport</option>
       {airports.map((airport: any) => (
         <option key={airport.id} value={airport.iata_code}>
-          {airport.name} {airport.iata_code}
-        </option>
+          {airport.airport_name} -{airport.country_name}- {airport.iata_code}
+          </option>
       ))}
     </select>
               
@@ -248,6 +361,8 @@ export default function Home() {
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               >
+                <option value=""></option>
+
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>
@@ -267,26 +382,177 @@ export default function Home() {
 
         {flightOffers && (
           <div className="mt-8">
-            <h2 className="text-xl font-semibold">Flight Offers</h2>
-            {flightOffers.data.length > 0 ? (
-              <ul className="space-y-4">
-                {flightOffers.data.map((offer) => (
-                  <li
-                    key={offer.id} // Unique key for each flight offer
-                    className="p-4 border border-gray-300 rounded-md"
-                  >
-                    <div>
-                      <p>{offer.details}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+            <h2 className="text-2xl font-bold text-blue-700 mb-4">
+              Ponude letova
+            </h2>
+            {flightOffers.data.length === 0 ? (
+              <p className="text-center text-lg text-gray-600">
+                Nema letova za te datume.
+              </p>
             ) : (
-              <p>No flight offers found.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {flightOffers.data.map((offer, index) => (
+                  <div
+                    key={index}
+                    className="border-2 border-gray-200 rounded-xl p-6 shadow-lg bg-white hover:shadow-xl transform transition duration-300 hover:scale-105"
+                  >
+                    <h3 className="text-xl font-semibold text-blue-800 mb-3">
+                      {offer.id}
+                    </h3>
+
+                    {/* Polazni Aerodrom (Departure Airport) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Polazni aerodrom:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {offer.itineraries[0]?.segments[0]?.departure.iataCode}
+                      </p>
+                    </div>
+
+                    {/* Odredišni Aerodrom (Arrival Airport) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Odredišni aerodrom:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {offer.itineraries[0]?.segments[1]?.arrival.iataCode}
+                      </p>
+                    </div>
+
+                    {/* Datum Polaska/Povratka (Departure/Return Date) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Datum polaska:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[0]?.segments[0]?.departure.at
+                        ).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Datum povratka:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[1]?.segments[
+                            offer.itineraries[1].segments.length - 1
+                          ]?.arrival.at
+                        ).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    {/* Broj Presjedanja (Number of Stops) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Broj presjedanja (odlazno):
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {offer.itineraries[0]?.segments?.length - 1}
+                      </p>
+                    </div>
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Broj presjedanja (povratno):
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {offer.itineraries[1]?.segments?.length - 1}
+                      </p>
+                    </div>
+
+                    {/* Broj Putnika (Number of Passengers) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">Broj putnika:</p>
+                      <p className="text-lg text-gray-900">{formData.adults}</p>
+                    </div>
+
+                    {/* Valuta (Currency) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">Valuta:</p>
+                      <p className="text-lg text-gray-900">
+                        {offer.price.currency}
+                      </p>
+                    </div>
+
+                    {/* Ukupna Cijena (Total Price) */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Ukupna cijena:
+                      </p>
+                      <p className="text-lg font-semibold text-green-600">
+                        {offer.price.currency} {offer.price.grandTotal}
+                      </p>
+                    </div>
+
+                    {/* Aircraft Time */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Vrijeme polaska:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[0]?.segments[0]?.departure.at
+                        ).toLocaleTimeString()}
+                      </p>
+                    </div>
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Vrijeme dolaska:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[0]?.segments[0]?.arrival.at
+                        ).toLocaleTimeString()}
+                      </p>
+                    </div>
+
+                    {/* Aircraft Time  Return*/}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Vrijeme polaska povratka:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[1]?.segments[0]?.departure.at
+                        ).toLocaleTimeString()}
+                      </p>
+                    </div>
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Vrijeme dolaska povratka:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {new Date(
+                          offer.itineraries[1]?.segments[0]?.arrival.at
+                        ).toLocaleTimeString()}
+                      </p>
+                    </div>
+
+                    {/* Airline */}
+                    <div className="mb-3">
+                      <p className="font-medium text-gray-700">
+                        Zrakoplovna kompanija:
+                      </p>
+                      <p className="text-lg text-gray-900">
+                        {
+                          flightOffers.dictionaries.carriers[
+                            offer.itineraries[0]?.segments[0]?.carrierCode
+                          ]
+                        }
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
+               
           </div>
         )}
       </div>
     </div>
+
   );
 }
+
