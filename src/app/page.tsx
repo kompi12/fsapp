@@ -249,7 +249,7 @@ export default function Home() {
                 htmlFor="departureDate"
                 className="block text-sm font-medium text-gray-700"
               >
-                Departure Date
+                Polazak
               </label>
               <input
                 type="date"
@@ -266,7 +266,7 @@ export default function Home() {
                 htmlFor="returnDate"
                 className="block text-sm font-medium text-gray-700"
               >
-                Return Date
+                Povratak
               </label>
               <input
                 type="date"
@@ -285,7 +285,6 @@ export default function Home() {
                 htmlFor="originLocationCode"
                 className="block text-sm font-medium text-gray-700"
               >
-                Origin (IATA Code)
               </label>
               <select
                 id="originLocationCode"
@@ -294,7 +293,7 @@ export default function Home() {
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               >
-               <option value="">Select Airport</option>
+               <option value="">Polazni aerodrom</option>
       {airports.map((airport: any) => (
         <option key={airport.id} value={airport.iata_code}>
           {airport.airport_name} -{airport.country_name}- {airport.iata_code}
@@ -309,7 +308,7 @@ export default function Home() {
                 htmlFor="destinationLocationCode"
                 className="block text-sm font-medium text-gray-700"
               >
-                Destination (IATA Code)
+                
               </label>
               <select
                 id="destinationLocationCode"
@@ -318,7 +317,7 @@ export default function Home() {
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               >
-               <option value="">Select Airport</option>
+               <option value="">Povratni aerodrom</option>
       {airports.map((airport: any) => (
         <option key={airport.id} value={airport.iata_code}>
           {airport.airport_name} -{airport.country_name}- {airport.iata_code}
@@ -335,7 +334,7 @@ export default function Home() {
                 htmlFor="adults"
                 className="block text-sm font-medium text-gray-700"
               >
-                Adults
+                Broj ljudi
               </label>
               <input
                 type="number"
@@ -352,7 +351,7 @@ export default function Home() {
                 htmlFor="currencyCode"
                 className="block text-sm font-medium text-gray-700"
               >
-                Currency
+                Valuta
               </label>
               <select
                 id="currencyCode"
